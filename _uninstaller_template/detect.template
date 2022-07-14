@@ -1,0 +1,15 @@
+$PATHS = @("HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
+
+
+ForEach ($path in $PATHS) {
+    $installed = Get-ChildItem -Path $path |
+    ForEach-Object { Get-ItemProperty $_.PSPath } |
+    Where-Object {$_.DisplayName -eq 'a369b91c-188f-4adc-899b-3a47d38c3ce7' } |
+    Select-Object -Property DisplayName, DisplayVersion, UninstallString
+
+    ForEach ($app in $installed) {
+        Write-Output "Found: $($app.DisplayName) $($app.DisplayVersion)"
+        Write-Output "$($app.UninstallString)"
+    }
+}
