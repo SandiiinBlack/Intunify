@@ -132,7 +132,7 @@ def main() -> None:
 
     copy_file(readme_template, readme, DISPLAY_NAME_TO_REPLACE, display_name)
     if args.key:
-        copy_known_file(detection_template, detect, DISPLAY_NAME_TO_REPLACE, display_name, PATH_TO_REPLACE, args.key)
+        copy_known_file(known_key_detection_template, detect, DISPLAY_NAME_TO_REPLACE, display_name, PATH_TO_REPLACE, args.key)
         copy_known_file(known_key_uninstallation_template, uninstall, DISPLAY_NAME_TO_REPLACE, display_name, PATH_TO_REPLACE, args.key)
     else:
         copy_file(detection_template, detect, DISPLAY_NAME_TO_REPLACE, display_name)
