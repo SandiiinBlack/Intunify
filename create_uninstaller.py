@@ -1,3 +1,28 @@
+r"""create_uninstaller.py
+
+This script takes as input:
+Positional argument(s):
+    name        Either the exact DisplayName value of the registry key from which 
+                to find an UninstallString. If --key is suppied, this value is
+                only used in naming the folder and in the README.md
+
+Optional argument(s):
+    -k, --key   If supplied, the generated powershell scripts will target this
+                registry key directly, rather than looping through all until
+                a match on the DisplayName property is found
+
+And creates a folder containin the following files:
+    \path\to\current\directory\{name}
+        \README.md
+        \detect.ps1
+        \uninstall.ps1
+
+If IntuneWinAppUtil.exe is installed and on the PATH it will create an INTUNEWIN
+package in the same directory e.g.
+    \path\to\current\directory\{name}
+        \uninstall.intunewin
+"""
+
 import subprocess
 from pathlib import Path
 from argparse import ArgumentParser, Namespace
