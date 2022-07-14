@@ -1,12 +1,11 @@
 $path = "5e56c978-80c2-4369-aafb-037cab7dda93"
 
-Get-Item -Path "$path"
-    $installed = Get-Item -Path $path | 
-    ForEach-Object { Get-ItemProperty $_.PSPath } | 
-    Select-Object -Property DisplayName, DisplayVersion, UninstallString
+$installed = Get-Item -Path $path | 
+ForEach-Object { Get-ItemProperty $_.PSPath } | 
+Select-Object -Property DisplayName, DisplayVersion, UninstallString
 
-    ForEach ($app in $installed) {
-        Write-Output "Found: $($app.DisplayName) $($app.DisplayVersion)"
-        Write-Output "$($app.UninstallString)"
-    }
+ForEach ($app in $installed) {
+    Write-Output "Found: $($app.DisplayName) $($app.DisplayVersion)"
+    Write-Output "$($app.UninstallString)"
 }
+
