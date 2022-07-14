@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 
 def slugify(string: str) -> str:
     """Return a string replacing spaces with underscores and stripping double periods.
@@ -26,6 +26,19 @@ def get_display_name() -> str:
     return args.name
 
 
+def get_args() -> Namespace:
+    """Return the arguments parsed in from the command line
+
+    Returns:
+        Namespace: args
+    """
+    parser = ArgumentParser()
+    parser.add_argument('name', type=str, help="The value of the 'Display Name' registry key for the application to uninstall. Also used to name folder.")
+    parser.add_argument('-k', '--key', type=str, help=r'Registry key path of application to uninstall (if known). e.g. "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{806133d5-0a8a-48d2-a337-3a97013d4f27}"')
+    args = parser.parse_args()
+    return args
+
+
 def copy_file(inf: Path, outf: Path, string_to_be_replaced: str, name: str) -> None:
     """Copies the contents of 'inf' to 'outf' replacing 'replacement_string' with 'name'
 
@@ -39,6 +52,25 @@ def copy_file(inf: Path, outf: Path, string_to_be_replaced: str, name: str) -> N
         text = f.read().replace(string_to_be_replaced, name)
         g.write(text)
     
+
+def copy_known_file(inf: Path, outf: Path, guid: str, guid_replacement: str, path_to_replace: str, replacement_path: str) -> None:
+    r"""Copies the contents of 'inf' to 'outf' replacing 'replacement_string' with 'name'
+
+    Args:
+        inf (Path): in file path
+        outf (Path): out file path
+        replacement_string (str): GUID found in 'inf' to be replaced in 'outf' with 'name'
+        name (str): user input string that should correspond to the DisplayName registry value
+        path_to_replace (str): another GUID to replace
+        replacement_path (str): path of the registry key, should take the format
+        "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F307E329-805A-4C79-BAEC-7FB35F3FE64B}"
+    """
+    with open(inf, "r") as f, outf.open("w") as g:
+        if not replacement_path.startswith("HKEY_LOCAL_MACHINE"):
+            raise ValueError(f"replacement_path must start with HKEY_LOCAL_MACHINE")
+        replacement_path = replacement_path.replace("HKEY_LOCAL_MACHINE", "HKLM:")
+        text = f.read().replace(guid, guid_replacement).replace(path_to_replace, replacement_path)
+        g.write(text)
 
 def create_intunewin_file(slug: str) -> None:
     """Generate an .intunewin file from the folder contents.
@@ -77,27 +109,37 @@ def main() -> None:
     a detection script and a README.md file. If IntuneWinAppUtil.exe exists on the PATH, it will
     also generate an intunewin file.
     """
-    REPLACEMENT = "a369b91c-188f-4adc-899b-3a47d38c3ce7"
-    name = get_display_name()
-    slug = slugify(name)
+    DISPLAY_NAME_TO_REPLACE = "a369b91c-188f-4adc-899b-3a47d38c3ce7"
+    PATH_TO_REPLACE = "5e56c978-80c2-4369-aafb-037cab7dda93"
+    args = get_args()
+    display_name = args.name
+    slug = slugify(display_name)
 
     script_dir = Path(__file__).parent
     templates_dir = script_dir / "_uninstaller_template"
     detection_template = templates_dir / "detect.template"
+    known_key_detection_template = templates_dir / "known_key_detect.template"
     uninstallation_template = templates_dir / "uninstall.template"
+    known_key_uninstallation_template = templates_dir / "known_key_uninstall.template"
     readme_template = templates_dir / "README.template"
 
     output_directory = Path.cwd() / slug
     Path.mkdir(output_directory, exist_ok=True)
+
     readme = output_directory / "README.md"
     uninstall = output_directory / "uninstall.ps1"
     detect = output_directory / "detect.ps1"
 
-    copy_file(readme_template, readme, REPLACEMENT, name)
-    copy_file(detection_template, detect, REPLACEMENT, name)
-    copy_file(uninstallation_template, uninstall, REPLACEMENT, name)
+    copy_file(readme_template, readme, DISPLAY_NAME_TO_REPLACE, display_name)
+    if args.key:
+        copy_known_file(detection_template, detect, DISPLAY_NAME_TO_REPLACE, display_name, PATH_TO_REPLACE, args.key)
+        copy_known_file(known_key_uninstallation_template, uninstall, DISPLAY_NAME_TO_REPLACE, display_name, PATH_TO_REPLACE, args.key)
+    else:
+        copy_file(detection_template, detect, DISPLAY_NAME_TO_REPLACE, display_name)
+        copy_file(uninstallation_template, uninstall, DISPLAY_NAME_TO_REPLACE, display_name)
 
-    create_intunewin_file(name)
+
+    create_intunewin_file(display_name)
 
 if __name__ == "__main__":
     main()
