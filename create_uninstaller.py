@@ -23,32 +23,14 @@ package in the same directory e.g.
         \uninstall.intunewin
 """
 
-import subprocess
+
 from pathlib import Path
 from argparse import ArgumentParser, Namespace
-
-def slugify(string: str) -> str:
-    """Return a string replacing spaces with underscores and stripping double periods.
-
-    Args:
-        string (str)
-
-    Returns:
-        str
-    """
-    return string.replace(" ", "_").replace("..","")
+from intunify import slugify, copy_file, copy_known_file, create_intunewin_file
 
 
-def get_display_name() -> str:
-    """Return the value of the name parameter parsed in from the command line
 
-    Returns:
-        str: args.name
-    """
-    parser = ArgumentParser()
-    parser.add_argument('name', type=str, help="The value of the 'Display Name' registry key for the application to uninstall")
-    args = parser.parse_args()
-    return args.name
+
 
 
 def get_args() -> Namespace:
@@ -64,69 +46,9 @@ def get_args() -> Namespace:
     return args
 
 
-def copy_file(inf: Path, outf: Path, string_to_be_replaced: str, name: str) -> None:
-    """Copies the contents of 'inf' to 'outf' replacing 'replacement_string' with 'name'
 
-    Args:
-        inf (Path): in file path
-        outf (Path): out file path
-        replacement_string (str): GUID found in 'inf' to be replaced in 'outf' with 'name'
-        name (str): user input string that should correspond to the DisplayName registry value
-    """
-    with open(inf, "r") as f, outf.open("w") as g:
-        text = f.read().replace(string_to_be_replaced, name)
-        g.write(text)
-    
 
-def copy_known_file(inf: Path, outf: Path, guid: str, guid_replacement: str, path_to_replace: str, replacement_path: str) -> None:
-    r"""Copies the contents of 'inf' to 'outf' replacing 'replacement_string' with 'name'
 
-    Args:
-        inf (Path): in file path
-        outf (Path): out file path
-        replacement_string (str): GUID found in 'inf' to be replaced in 'outf' with 'name'
-        name (str): user input string that should correspond to the DisplayName registry value
-        path_to_replace (str): another GUID to replace
-        replacement_path (str): path of the registry key, should take the format
-        "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{F307E329-805A-4C79-BAEC-7FB35F3FE64B}"
-    """
-    with open(inf, "r") as f, outf.open("w") as g:
-        if not replacement_path.startswith("HKEY_LOCAL_MACHINE"):
-            raise ValueError(f"replacement_path must start with HKEY_LOCAL_MACHINE")
-        replacement_path = replacement_path.replace("HKEY_LOCAL_MACHINE", "HKLM:")
-        text = f.read().replace(guid, guid_replacement).replace(path_to_replace, replacement_path)
-        g.write(text)
-
-def create_intunewin_file(slug: str) -> None:
-    """Generate an .intunewin file from the folder contents.
-
-    Requires IntuneWinAppUtil.exe to be installed and on the path.
-
-    Args:
-        slug (str): slug of the folder name
-    """
-    try:
-        subprocess.run(
-            [
-                f"IntuneWinAppUtil.exe", 
-                f"-c", 
-                f".\{slug}\\", 
-                f"-s", 
-                f".\{slug}\\uninstall.ps1",
-                f"-o", 
-                f".\{slug}\\"
-            ], 
-            timeout=15
-        )
-    except FileNotFoundError as exc:
-        print(f"Unable to generate {slug}.intunewin file because the IntuneWinAppUtil executable could not be found.")
-    except subprocess.CalledProcessError as exc:
-        print(
-            f"Process failed because did not return a successful return code. "
-            f"Returned {exc.returncode}\n{exc}"
-        )
-    except subprocess.TimeoutExpired as exc:
-        print(f"Process timed out.\n{exc}")
 
 
 def main() -> None:
@@ -136,6 +58,7 @@ def main() -> None:
     """
     DISPLAY_NAME_TO_REPLACE = "a369b91c-188f-4adc-899b-3a47d38c3ce7"
     PATH_TO_REPLACE = "5e56c978-80c2-4369-aafb-037cab7dda93"
+    
     args = get_args()
     display_name = args.name
     slug = slugify(display_name)
@@ -164,7 +87,7 @@ def main() -> None:
         copy_file(uninstallation_template, uninstall, DISPLAY_NAME_TO_REPLACE, display_name)
 
 
-    create_intunewin_file(display_name)
+    create_intunewin_file(display_name, "uninstall.ps1")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,7 @@
+This package installs a369b91c-188f-4adc-899b-3a47d38c3ce7 using winget
+
+Install command: %SystemRoot%\sysnative\WindowsPowerShell\v1.0\PowerShell.exe -ExecutionPolicy Bypass .\uninstall.ps1 -WingetId a369b91c-188f-4adc-899b-3a47d38c3ce7
+Uninstall command: %SystemRoot%\sysnative\WindowsPowerShell\v1.0\PowerShell.exe -ExecutionPolicy Bypass .\uninstall.ps1 -WingetId a369b91c-188f-4adc-899b-3a47d38c3ce7
+
+Detection method: Upload file
+Detection script: detect.ps1
