@@ -64,7 +64,7 @@ def copy_nary_file(inf: Path, outf: Path, replacements: List[Tuple[str, str]] or
                 text = text.replace(guid, replacement)
         g.write(text)
 
-def create_intunewin_file(slug: str, source_file: str) -> None:
+def create_intunewin_file(slug: str, source_file: str, cwd=Path.cwd()) -> None:
     """Generate an .intunewin file from the folder contents.
 
     Requires IntuneWinAppUtil.exe to be installed and on the path.
@@ -84,7 +84,8 @@ def create_intunewin_file(slug: str, source_file: str) -> None:
                 f".\{slug}\\",
                 f"-q"
             ], 
-            timeout=15
+            timeout=15,
+            cwd=cwd
         )
     except FileNotFoundError as exc:
         print(f"Unable to generate {slug}.intunewin file because the IntuneWinAppUtil executable could not be found.")

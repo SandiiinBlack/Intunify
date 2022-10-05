@@ -1,0 +1,47 @@
+[
+    {
+      "name": "Microsoft Visual Studio Code",
+      "winget_id": "Microsoft.VisualStudioCode",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1"
+    },
+    {
+      "name": "Notepad++",
+      "winget_id": "Notepad++.Notepad++",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Notepad++"
+    },
+    {
+      "name": "PuTTY",
+      "winget_id": "PuTTY.PuTTY",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{E078C644-A120-4668-AD62-02E9FD530190}"
+    },
+    {
+      "name": "WinSCP",
+      "winget_id": "WinSCP.WinSCP",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\winscp3_is1"
+    },
+    {
+      "name": "Git",
+      "winget_id": "Git.Git",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1"
+    },
+    {
+      "name": "7-Zip",
+      "winget_id": "7zip.7zip",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{23170F69-40C1-2702-2107-000001000000}"
+    },
+    {
+      "name": "WinMerge",
+      "winget_id": "WinMerge.WinMerge",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\WinMerge_is1"
+    },
+    {
+      "name": "Docker Desktop",
+      "winget_id": "Docker.DockerDesktop",
+      "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Docker Desktop"
+    },
+    {
+      "name": "Mozilla Firefox ESR",
+      "winget_id": "Mozilla.Firefox.ESR",
+      "file_path": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+    }
+  ]

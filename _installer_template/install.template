@@ -16,7 +16,7 @@ try {
         Write-Log($msg)
         
         # version logic
-        .\winget.exe install --exact --id $WingetId de6a4f36-0b0c-46de-b491-36960cbcee2d --silent --accept-package-agreements --accept-source-agreements --scope machine --override "$InstallerOptions" --log "$LogPath"
+        .\winget.exe install --exact --id $WingetId de6a4f36-0b0c-46de-b491-36960cbcee2d --silent --accept-package-agreements --accept-source-agreements --scope machine --log "$LogPath"
         
         
         Write-Host "Installation completed (consult installation log for details) at $logPath"

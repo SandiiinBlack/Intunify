@@ -1,21 +1,22 @@
+from argparse import ArgumentParser
+import json
+from pathlib import Path
 from create_installer import generate_installer
 
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument('-i', '--infile', type=str, required=True, help="path to JSON input file")
+    parser.add_argument('-o', '--outfolder', type=str, required=True, help="path to place intunewin apps")
+    return parser.parse_args()
+
+
 def main():
-    applications = [
-        {
-            "winget_id": "Git.Git",
-            "file_path": r"Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1",
-        },
-        {
-            "winget_id": "WinSCP.WinSCP",
-            "registry_key": r"Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\winscp3_is1",
-            "version": "5.21.2"
-        },
-        {
-            "winget_id": "PuTTY.PuTTY",
-            "file_path": r"C:\Program Files\PuTTY",
-        },
-    ]
+    args = parse_args()
+    infile_path = Path(args.infile)
+    with infile_path.open("r") as f:
+        applications = json.load(f)
+    
+    # Test for errors
     for application in applications:
         if "winget_id" not in application:
             raise ValueError("All applications must supply a valid 'winget_id' key")
@@ -26,6 +27,7 @@ def main():
         if ("file_path" in application and "registry_key" in application):
             raise ValueError(f"All applications must contain either a 'file_path' or a 'registry_key' key, not both")
     
+    # Build intunewin app
     for application in applications:
         winget_id = application["winget_id"]
         registry_key = None
@@ -40,7 +42,7 @@ def main():
         else:
             version = None
         
-        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, version=version)
+        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, version=version, output_parent_directory=Path(args.outfolder).absolute())
 
 
 if __name__ == '__main__':

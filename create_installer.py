@@ -85,7 +85,7 @@ def main() -> None:
     generate_installer(winget_id, registry_key, file_path, version)
 
 
-def generate_installer(winget_id, registry_key=None, file_path=None, version=None):
+def generate_installer(winget_id, registry_key=None, file_path=None, version=None, output_parent_directory = Path.cwd()):
     """Given a winget_id value, a registry key or a file path as evidence of successful installation,
     and optionally a version strig, generates a folder containing an install script,
     a detection script, an uninstall script and a README.md file.
@@ -118,7 +118,8 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
     known_key_uninstallation_template = templates_dir / "known_key_uninstall.template"
 
     # Output file paths
-    output_directory = Path.cwd() / slug
+    Path.mkdir(output_parent_directory, exist_ok=True)
+    output_directory = output_parent_directory / slug
     Path.mkdir(output_directory, exist_ok=True)
 
     readme_output_file_path = output_directory / "README.md"
@@ -162,7 +163,7 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
         # File doesn't require any template replacements
         copy_nary_file(uninstallation_template, uninstall_output_file_path)
 
-    create_intunewin_file(winget_id, "install.ps1")
+    create_intunewin_file(winget_id, "install.ps1", cwd=output_parent_directory)
 
 
 if __name__ == "__main__":
