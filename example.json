@@ -1,5 +1,80 @@
 [
     {
+      "name": "Google Chrome",
+      "winget_id": "Google.Chrome",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "OpenJDK 8",
+      "winget_id": "ojdkbuild.ojdkbuild",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Node.js",
+      "winget_id": "OpenJS.NodeJS",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "GitHub Desktop",
+      "winget_id": "GitHub.GitHubDesktop",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Python 3.10",
+      "winget_id": "Python.Python.3.10",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Tortoise SVN",
+      "winget_id": "TortoiseSVN.TortoiseSVN",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Adobe Acrobat Reader",
+      "winget_id": "Adobe.Acrobat.Reader.64-bit",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "KDiff3",
+      "winget_id": "KDE.KDiff3",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "VisualStudio 2022 (Community)",
+      "winget_id": "Microsoft.VisualStudio.2022.Community",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Azure Data Studio",
+      "winget_id": "Microsoft.AzureDataStudio",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "SQL Server Management Studio",
+      "winget_id": "Microsoft.SQLServerManagementStudio",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Azure CLI",
+      "winget_id": "Microsoft.AzureCLI",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "Microsoft SQL Server 2019 Developer",
+      "winget_id": "Microsoft.SQLServer.2019.Developer",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "R for Windows",
+      "winget_id": "RProject.R",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
+      "name": "RStudio Desktop Open Source Edition",
+      "winget_id": "RStudio.RStudio.OpenSource",
+      "registry_key": "this_does_not_exist, yet."
+    },
+    {
       "name": "Microsoft Visual Studio Code",
       "winget_id": "Microsoft.VisualStudioCode",
       "registry_key": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{EA457B21-F73E-494C-ACAB-524FDE069978}_is1"

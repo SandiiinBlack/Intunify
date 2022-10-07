@@ -1,1 +1,6 @@
-Get-ChildItem -Path 'a369b91c-188f-4adc-899b-3a47d38c3ce7'
+$resolvedPath = Resolve-Path "a369b91c-188f-4adc-899b-3a47d38c3ce7"
+
+if ($resolvedPath) {
+    #If multiple versions (when pre-release versions are installed), pick last one
+    Write-Output "Found: $($resolvedPath[-1].Path)"
+}
