@@ -74,7 +74,7 @@ def get_args() -> Namespace:
 
 def main() -> None:
     """
-    Generate an installer package from the commandline. Run create_installer.py -h for usage.
+    Generate an installer package from the command line. Run create_installer.py -h for usage.
     """
     args = get_args()
     winget_id = args.name
@@ -87,7 +87,7 @@ def main() -> None:
 
 def generate_installer(winget_id, registry_key=None, file_path=None, version=None, output_parent_directory = Path.cwd()):
     """Given a winget_id value, a registry key or a file path as evidence of successful installation,
-    and optionally a version strig, generates a folder containing an install script,
+    and optionally a version string, generates a folder containing an install script,
     a detection script, an uninstall script and a README.md file.
 
     If IntuneWinAppUtil.exe exists on the PATH, it will also generate an intunewin file.

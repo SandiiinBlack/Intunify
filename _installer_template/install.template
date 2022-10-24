@@ -1,6 +1,6 @@
 param(
-    $WingetId, 
-    $LogPath="$env:TEMP\winget-installations.log")
+    $LogPath="$env:TEMP\winget-installations.log"
+    )
 
 function Write-Log($message)
 {
@@ -9,26 +9,19 @@ function Write-Log($message)
 }
 
 try {
-    if ($WingetId) {
-        Push-Location 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
-        $msg = "Installing $WingetId from WinGet."
-        Write-Host "$msg"
-        Write-Log($msg)
-        
-        # version logic
-        .\winget.exe install --exact --id $WingetId de6a4f36-0b0c-46de-b491-36960cbcee2d --silent --accept-package-agreements --accept-source-agreements --scope machine --log "$LogPath"
-        
-        
-        Write-Host "Installation completed (consult installation log for details) at $logPath"
-        Write-Log("Installation completed. Restarting Windows Explorer process as winget tends to kill it.")
-        Stop-Process -Name Explorer -Force
-        exit 0
-
-    } else {
-        $errorMessage = "WingetId is a required parameter"
-        Write-Log($errorMessage)
-        throw "$errorMessage"
-    }
+    Push-Location 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
+    $msg = "Installing a369b91c-188f-4adc-899b-3a47d38c3ce7 from WinGet."
+    Write-Host "$msg"
+    Write-Log($msg)
+    
+    # version logic
+    .\winget.exe install --exact --id a369b91c-188f-4adc-899b-3a47d38c3ce7 de6a4f36-0b0c-46de-b491-36960cbcee2d --silent --accept-package-agreements --accept-source-agreements --scope machine --log "$LogPath"
+    
+    
+    Write-Host "Installation completed (consult installation log for details) at $logPath"
+    Write-Log("Installation completed. Restarting Windows Explorer process as winget tends to kill it.")
+    Stop-Process -Name Explorer -Force
+    exit 0
 } catch {
     $_.Exception # Print exception message
     exit 100
