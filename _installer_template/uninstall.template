@@ -1,5 +1,4 @@
 param(
-    $WingetId,
     $LogPath ="$env:TEMP\winget-uninstallations.log"
 )
 function Write-Log($message)
@@ -10,26 +9,19 @@ function Write-Log($message)
 
 
 try {
-    if ($WingetId) {
-        Push-Location 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
-        
-        $msg = "Uninstalling $WingetId from WinGet."
-        Write-Host "$msg"
-        Write-Log($msg)
-        .\winget.exe uninstall --exact --id $WingetId --silent --log "$LogPath"
-        $msg = "Uninstallation process finished (doesn't mean it worked - winget is temperamental as to whether or not it will log)"
-        Write-Host "$msg"
-        Write-Log($msg)
-        Write-Host "Consult uninstallation log file at $LogPath"
-        Write-Log("Uninstallation completed. Restarting Windows Explorer process as winget tends to kill it.")
-        Stop-Process -Name Explorer -Force
-        exit 0
-    }
-    else {
-        $errorMessage = "No arguments supplied. Must supply a valid winget ID"
-        Write-Log($errorMessage)
-        throw "$errorMessage"
-    }
+    Push-Location 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
+    
+    $msg = "Uninstalling a369b91c-188f-4adc-899b-3a47d38c3ce7 from WinGet."
+    Write-Host "$msg"
+    Write-Log($msg)
+    .\winget.exe uninstall --exact --id a369b91c-188f-4adc-899b-3a47d38c3ce7 --silent --log "$LogPath"
+    $msg = "Uninstallation process finished (doesn't mean it worked - winget is temperamental as to whether or not it will log)"
+    Write-Host "$msg"
+    Write-Log($msg)
+    Write-Host "Consult uninstallation log file at $LogPath"
+    Write-Log("Uninstallation completed. Restarting Windows Explorer process as winget tends to kill it.")
+    Stop-Process -Name Explorer -Force
+    exit 0
 } catch {
     $_.Exception # Print exception message
     exit 100
