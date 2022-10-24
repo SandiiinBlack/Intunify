@@ -136,7 +136,7 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
     copy_nary_file(
         installation_template,
         install_output_file_path,
-        [(VERSION_TO_REPLACE, version_string)],
+        [(VERSION_TO_REPLACE, version_string), (WINGET_ID_TO_REPLACE, winget_id)],
     )
 
     # We prefer args.key to args.file (and exit if both or neither are supplied)
