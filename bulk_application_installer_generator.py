@@ -7,6 +7,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('-i', '--infile', type=str, required=True, help="path to JSON input file")
     parser.add_argument('-o', '--outfolder', type=str, required=True, help="path to place intunewin apps")
+    parser.add_argument('-x', '--exclude', type=str, nargs="*", help=" List of space-separated WingetId's to exclude. Case insensitive.")
     return parser.parse_args()
 
 
@@ -27,6 +28,16 @@ def main():
         if ("file_path" in application and "registry_key" in application):
             raise ValueError(f"All applications must contain either a 'file_path' or a 'registry_key' key, not both")
     
+    # Remove excluded ids
+    if args.exclude:
+        lower_cased_ids_to_exclude = [winget_id.lower() for winget_id in args.exclude]
+        applications = [
+            app
+            for app
+            in applications
+            if app["winget_id"].lower() not in lower_cased_ids_to_exclude
+        ]
+
     # Build intunewin app
     for application in applications:
         winget_id = application["winget_id"]
