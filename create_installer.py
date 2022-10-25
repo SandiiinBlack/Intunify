@@ -31,7 +31,7 @@ package in the same directory e.g.
 
 from pathlib import Path
 from argparse import ArgumentParser, Namespace
-from intunify import copy_nary_file, slugify, create_intunewin_file
+from intunify import copy_nary_file, slugify, create_intunewin_file, get_winget_show_output
 
 
 def get_args() -> Namespace:
@@ -85,7 +85,7 @@ def main() -> None:
     generate_installer(winget_id, registry_key, file_path, version)
 
 
-def generate_installer(winget_id, registry_key=None, file_path=None, version=None, output_parent_directory = Path.cwd()):
+def generate_installer(winget_id, registry_key=None, file_path=None, version=None, output_parent_directory = Path.cwd(), include_show_output=False):
     """Given a winget_id value, a registry key or a file path as evidence of successful installation,
     and optionally a version string, generates a folder containing an install script,
     a detection script, an uninstall script and a README.md file.
@@ -127,10 +127,24 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
     uninstall_output_file_path = output_directory / "uninstall.ps1"
     detect_output_file_path = output_directory / "detect.ps1"
 
+    # Run winget show, massage output and save as package_details.yaml if run with --show.
+    if include_show_output:
+        try:
+            winget_show_output_file_path = output_directory / "package_details.yaml"
+
+            # Need to convert to LF for correct handling by Python
+            winget_show_output = get_winget_show_output(winget_id).replace('\r\n', '\n')
+
+            winget_show_output = winget_show_output[winget_show_output.find('Found'):].replace('Found ', 'Found: ')
+            with winget_show_output_file_path.open('w', encoding='utf-8') as f:
+                f.write(winget_show_output)
+        except UnicodeEncodeError as e:
+            print(f"Encounted a decoding error when parsing winget show output for {winget_id}. Skipping...")
+            print(e)
+
     # Always copy the README
     copy_nary_file(
-        readme_template, readme_output_file_path, [(WINGET_ID_TO_REPLACE, winget_id)]
-    )
+        readme_template, readme_output_file_path, [(WINGET_ID_TO_REPLACE, winget_id)])
 
     # Always copy the installation file
     copy_nary_file(
