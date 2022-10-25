@@ -48,7 +48,7 @@ def copy_known_file(inf: Path, outf: Path, guid: str, guid_replacement: str, pat
         text = f.read().replace(guid, guid_replacement).replace(path_to_replace, replacement_path)
         g.write(text)
 
-def copy_nary_file(inf: Path, outf: Path, replacements: List[Tuple[str, str]] or None = None) -> None:
+def copy_nary_file(inf: Path, outf: Path, replacements: List[Tuple[str, str]] or None = None, affixment=None) -> None:
     r"""Copies the contents of 'inf' to 'outf' replacing 'replacement_string' with 'name'
 
     Args:
@@ -62,7 +62,12 @@ def copy_nary_file(inf: Path, outf: Path, replacements: List[Tuple[str, str]] or
             for guid, replacement in replacements:
                 replacement = replacement.replace(r"Computer\"HKEY_LOCAL_MACHINE", "HKEY_LOCAL_MACHINE").replace("HKEY_LOCAL_MACHINE", "HKLM:")
                 text = text.replace(guid, replacement)
+        if affixment:
+            text += affixment
         g.write(text)
+
+
+
 
 def create_intunewin_file(slug: str, source_file: str, cwd=Path.cwd()) -> None:
     """Generate an .intunewin file from the folder contents.
@@ -96,6 +101,38 @@ def create_intunewin_file(slug: str, source_file: str, cwd=Path.cwd()) -> None:
         )
     except subprocess.TimeoutExpired as exc:
         print(f"Process timed out.\n{exc}")
+
+
+def get_winget_show_output(winget_id):
+    """Generate an .intunewin file from the folder contents.
+
+    Requires IntuneWinAppUtil.exe to be installed and on the path.
+
+    Args:
+        slug (str): slug of the folder name
+    """
+    try:
+        out = subprocess.check_output(
+            [
+                f"winget.exe",
+                f"show",
+                f"--exact", 
+                f"--id", 
+                f"{winget_id}"
+            ], 
+            timeout=15
+        )
+        return out.decode()
+    except FileNotFoundError as exc:
+        print(f"Unable to generate {slug}.intunewin file because the IntuneWinAppUtil executable could not be found.")
+    except subprocess.CalledProcessError as exc:
+        print(
+            f"Process failed because did not return a successful return code. "
+            f"Returned {exc.returncode}\n{exc}"
+        )
+    except subprocess.TimeoutExpired as exc:
+        print(f"Process timed out.\n{exc}")
+
 
 # TODO: Confirm if this is still used
 def get_display_name() -> str:

@@ -7,6 +7,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('-i', '--infile', type=str, required=True, help="path to JSON input file")
     parser.add_argument('-o', '--outfolder', type=str, required=True, help="path to place intunewin apps")
+    parser.add_argument('-s', '--show', action="store_true", default=False)
     exclusion_group = parser.add_mutually_exclusive_group()
     exclusion_group.add_argument('-x', '--exclude', type=str, nargs="*", help="list of space-separated WingetId's to exclude. Case insensitive.")
     exclusion_group.add_argument('-X', '--excludefile', type=str, help="path to a json file containing an array of WingetIds to exclude. Exclusion is case insensitive.")
@@ -69,7 +70,7 @@ def main():
         else:
             version = None
         
-        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, version=version, output_parent_directory=Path(args.outfolder).absolute())
+        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, version=version, output_parent_directory=Path(args.outfolder).absolute(), include_show_output=args.show)
 
 
 if __name__ == '__main__':
