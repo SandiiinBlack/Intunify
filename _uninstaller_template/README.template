@@ -1,7 +1,18 @@
-This package uninstalls a369b91c-188f-4adc-899b-3a47d38c3ce7 by finding and using an uninstall string registry key
+# Uninstall a369b91c-188f-4adc-899b-3a47d38c3ce7
+This package uninstalls a369b91c-188f-4adc-899b-3a47d38c3ce7 by finding and using an uninstall string in the registry
 
-Install command: blank
-Uninstall command: %SystemRoot%\sysnative\WindowsPowerShell\v1.0\PowerShell.exe -ExecutionPolicy Bypass .\uninstall.ps1
+## Install command
+```ps1
+blank
+```
 
-Detection method: Upload file
-Detection script: detect.ps1
+## Uninstall command
+```ps1
+%SystemRoot%\sysnative\WindowsPowerShell\v1.0\PowerShell.exe -ExecutionPolicy Bypass .\uninstall.ps1
+```
+
+## Detection method
+Upload file
+
+## Detection script
+detect.ps1
