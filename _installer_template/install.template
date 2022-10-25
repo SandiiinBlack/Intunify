@@ -9,7 +9,9 @@ function Write-Log($message)
 }
 
 try {
-    Push-Location 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
+    $wingetPath = Resolve-Path 'C:\Program Files\WindowsApps\Microsoft.DesktopAppInstaller*x64__8wekyb3d8bbwe\'
+    $wingetLocation = $wingetPath[-1].Path
+    Push-Location $wingetLocation
     $msg = "Installing a369b91c-188f-4adc-899b-3a47d38c3ce7 from WinGet."
     Write-Host "$msg"
     Write-Log($msg)
