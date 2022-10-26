@@ -81,25 +81,28 @@ def main() -> None:
     version = args.version
     registry_key = args.key
     file_path = args.file
+    display_name = args.displayname
 
-    generate_installer(winget_id, registry_key, file_path, version)
+    generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, display_name=display_name, version=version)
 
 
-def generate_installer(winget_id, registry_key=None, file_path=None, version=None, output_parent_directory = Path.cwd(), include_show_output=False):
+def generate_installer(winget_id, registry_key=None, file_path=None, display_name=None, version=None, output_parent_directory = Path.cwd(), include_show_output=False):
     """Given a winget_id value, a registry key or a file path as evidence of successful installation,
     and optionally a version string, generates a folder containing an install script,
     a detection script, an uninstall script and a README.md file.
 
     If IntuneWinAppUtil.exe exists on the PATH, it will also generate an intunewin file.
     """
-    if not(registry_key or file_path):
-        raise ValueError('Must supply either a registry_key or file_path as evidence of successful installation. Neither supplied.')
-    elif (registry_key and file_path):
-        raise ValueError('Must supply either a registry_key or file_path as evidence of successful installation. Both supplied.')
+    required_mutually_exclusive_args = [registry_key, file_path, display_name]
+    supplied_mutually_exclusive_args = [a for a in required_mutually_exclusive_args if a is not None]
+    if len(supplied_mutually_exclusive_args) != 1:
+        raise ValueError("Must supply exactly one of a registry_key, a registry key's DisplayName value or a file_path as evidence of successful installation.")
+
     
     WINGET_ID_TO_REPLACE = "a369b91c-188f-4adc-899b-3a47d38c3ce7"
     PATH_TO_REPLACE = "5e56c978-80c2-4369-aafb-037cab7dda93"
     VERSION_TO_REPLACE = "de6a4f36-0b0c-46de-b491-36960cbcee2d"
+    REGISTRY_DISPLAY_NAME_TO_REPLACE = "188e7e89-6fe4-44f0-8302-08972f8a6a34"
 
     slug = slugify(winget_id)
     version_string = f"--version '{version}'" if version else ""
@@ -112,9 +115,11 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
     installation_template = templates_dir / "install.template"
 
     detection_template = templates_dir / "detect.template"
+    known_display_name_detection_template = templates_dir / "known_display_name_detect.template"
     known_key_detection_template = templates_dir / "known_key_detect.template"
 
     uninstallation_template = templates_dir / "uninstall.template"
+    known_display_name_uninstallation_template = templates_dir / "known_display_name_uninstall.template"
     known_key_uninstallation_template = templates_dir / "known_key_uninstall.template"
 
     # Output file paths
@@ -153,7 +158,7 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
         [(VERSION_TO_REPLACE, version_string), (WINGET_ID_TO_REPLACE, winget_id)],
     )
 
-    # We prefer args.key to args.file (and exit if both or neither are supplied)
+    # We prefer args.key to args.displayname to args.file (and exit if other than one is supplied)
 
     if registry_key:
         # Copy known_detection_template and known_uninstall template
@@ -166,6 +171,17 @@ def generate_installer(winget_id, registry_key=None, file_path=None, version=Non
             known_key_uninstallation_template,
             uninstall_output_file_path,
             [(PATH_TO_REPLACE, registry_key)],
+        )
+    elif display_name:
+        copy_nary_file(
+            known_display_name_detection_template,
+            detect_output_file_path,
+            [(REGISTRY_DISPLAY_NAME_TO_REPLACE, display_name)],
+        )
+        copy_nary_file(
+            known_display_name_uninstallation_template,
+            uninstall_output_file_path,
+            [(REGISTRY_DISPLAY_NAME_TO_REPLACE, display_name)],
         )
     else:
         # Detect based on file evidence

@@ -26,10 +26,10 @@ def main():
             raise ValueError("All applications must supply a valid 'winget_id' key")
         if not application["winget_id"]:
             raise ValueError(f"All applications must supply a valid 'winget_id' value. Received: {application['winget']}")
-        if not ("file_path" in application or "registry_key" in application):
-            raise ValueError(f"All applications must contain either a 'file_path' or a 'registry_key' key")
-        if ("file_path" in application and "registry_key" in application):
-            raise ValueError(f"All applications must contain either a 'file_path' or a 'registry_key' key, not both")
+        matching_props = ["registry_key", "file_path", "display_name"]
+        count_matches = len([application.get(a, None) for a in matching_props if application.get(a, None) is not None])
+        if count_matches != 1:
+            raise ValueError(f"All applications must contain exactly one of a 'file_path', 'display_name' or a 'registry_key' property")
     
     # Remove excluded ids
     # parsed as command line arguments
@@ -59,10 +59,13 @@ def main():
     for application in applications:
         winget_id = application["winget_id"]
         registry_key = None
+        display_name = None
         file_path = None
         version = None
         if "registry_key" in application:
             registry_key = application["registry_key"]
+        elif "display_name" in application:
+            display_name = application["display_name"]
         elif "file_path" in application:
             file_path = application["file_path"]
         if "version" in application:
@@ -70,7 +73,7 @@ def main():
         else:
             version = None
         
-        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, version=version, output_parent_directory=Path(args.outfolder).absolute(), include_show_output=args.show)
+        generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, display_name=display_name, version=version, output_parent_directory=Path(args.outfolder).absolute(), include_show_output=args.show)
 
 
 if __name__ == '__main__':
