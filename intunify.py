@@ -104,12 +104,12 @@ def create_intunewin_file(slug: str, source_file: str, cwd=Path.cwd()) -> None:
 
 
 def get_winget_show_output(winget_id):
-    """Generate an .intunewin file from the folder contents.
+    """Generate a "package_details.yaml" file using the winget show command.
 
     Requires IntuneWinAppUtil.exe to be installed and on the path.
 
     Args:
-        slug (str): slug of the folder name
+        winget_id (str): --id of the application.
     """
     try:
         out = subprocess.check_output(
@@ -124,7 +124,7 @@ def get_winget_show_output(winget_id):
         )
         return out.decode()
     except FileNotFoundError as exc:
-        print(f"Unable to generate {slug}.intunewin file because the IntuneWinAppUtil executable could not be found.")
+        print(f"Unable to generate {winget_id}.package_details file because the winget executable could not be found.")
     except subprocess.CalledProcessError as exc:
         print(
             f"Process failed because did not return a successful return code. "
