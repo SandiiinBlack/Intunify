@@ -52,23 +52,35 @@ def get_args() -> Namespace:
         type=str,
         help='version number to install. Defaults to None (latest) e.g. "2.37.3"',
     )
-    parser.add_argument(
+    detections = parser.add_mutually_exclusive_group()
+    detections.add_argument(
         "-k",
         "--key",
         type=str,
         help=r'Registry key path whose existence will be used as evidence of successful installation. e.g. "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{806133d5-0a8a-48d2-a337-3a97013d4f27}"',
     )
-    parser.add_argument(
+    detections.add_argument(
         "-f",
         "--file",
         type=str,
         help=r'/path/to/file whose existence will be used as evidence of successful installation. e.g. "%PROGRAMFILES%\Mozilla Firefox\uninstall.exe"',
     )
+    detections.add_argument(
+        "-d",
+        "--display_name",
+        type=str,
+        help=r'DisplayName property an exact match to a registry key will be used as evidence of successful installation. e.g. "Docker Desktop"',
+    )
+    parser.add_argument(
+        "-s",
+        '--show', 
+        action="store_true", 
+        default=False,
+        help=r'Save winget show output to "package_details.yaml" file.',
+    )
     args = parser.parse_args()
-    if not (args.key or args.file):
-        parser.error("Must supply either --key or --file arguments.")
-    if args.key and args.file:
-        parser.error("Must supply either --key or --file arguments, not both.")
+    if not (args.key or args.file or args.display_name):
+        parser.error("Must supply either --key, --file, or --display_name arguments.")
     return args
 
 
@@ -77,13 +89,13 @@ def main() -> None:
     Generate an installer package from the command line. Run create_installer.py -h for usage.
     """
     args = get_args()
-    winget_id = args.name
+    winget_id = args.winget_id
     version = args.version
     registry_key = args.key
     file_path = args.file
-    display_name = args.displayname
+    display_name = args.display_name
 
-    generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, display_name=display_name, version=version)
+    generate_installer(winget_id=winget_id, registry_key=registry_key, file_path=file_path, display_name=display_name, version=version, include_show_output=args.show)
 
 
 def generate_installer(winget_id, registry_key=None, file_path=None, display_name=None, version=None, output_parent_directory = Path.cwd(), include_show_output=False):

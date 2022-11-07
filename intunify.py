@@ -60,7 +60,7 @@ def copy_nary_file(inf: Path, outf: Path, replacements: List[Tuple[str, str]] or
         text = f.read()
         if replacements:
             for guid, replacement in replacements:
-                replacement = replacement.replace(r"Computer\"HKEY_LOCAL_MACHINE", "HKEY_LOCAL_MACHINE").replace("HKEY_LOCAL_MACHINE", "HKLM:")
+                replacement = replacement.replace(r"Computer\"HKEY_LOCAL_MACHINE", "HKEY_LOCAL_MACHINE").replace("HKEY_LOCAL_MACHINE", "HKLM:").replace("'", "''")
                 text = text.replace(guid, replacement)
         if affixment:
             text += affixment
