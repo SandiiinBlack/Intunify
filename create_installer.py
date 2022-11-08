@@ -63,7 +63,7 @@ def get_args() -> Namespace:
         "-f",
         "--file",
         type=str,
-        help=r'/path/to/file whose existence will be used as evidence of successful installation. e.g. "%PROGRAMFILES%\Mozilla Firefox\uninstall.exe"',
+        help=r'/path/to/file whose existence will be used as evidence of successful installation. e.g. "C:\Program Files\Mozilla Firefox\uninstall.exe"',
     )
     detections.add_argument(
         "-d",
